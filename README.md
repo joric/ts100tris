@@ -41,6 +41,8 @@ Hardware
 
 * MMA8652FC (3-Axis, 12-bit Digital Accelerometer)
 
+* SSD1306 (White 96x16 OLED Display)
+
 Disclaimer
 ----------
 
