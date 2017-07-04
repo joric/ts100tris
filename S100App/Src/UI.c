@@ -269,7 +269,7 @@ void Show_Ver(u8 ver[],u8 flag)
     u8 *ptr;
     int k,i;
     u8 temp0,temp1,temp2;
-
+  
     if(ver[2] >= 0x30 && ver[2] < 0x3a)  temp1 = ver[2] - 0x30;
     if(ver[3] >= 0x30 && ver[3] < 0x3a)  temp2 = ver[3] - 0x30;
     if(ver[0] >= 0x30 && ver[0] < 0x3a)  temp0 = ver[0] - 0x30;
@@ -295,7 +295,7 @@ void Show_Ver(u8 ver[],u8 flag)
         Delay_Ms(1000);
         Clear_Screen();
         Clear_Watchdog();
-    }
+    }   
 }
 
 /*******************************************************************************
@@ -1500,7 +1500,7 @@ void Temp_SetProc(u8 key)
     if(key)//设置参数
     {
         if(EFFECTIVE_KEY_TIMER > 0) {
-            SetOpt_Proc();
+           SetOpt_Proc();
         }
     }
     else//临时温度
@@ -1624,6 +1624,8 @@ void OLed_Display(void)
             Display_BG();
         } else if(config_show == 2) {
             Show_Ver(device_info.ver,1);
+            Delay_Ms(250);
+            bTetris = 1;
         }
         if(config_show != 3) {
             Set_gKey(NO_KEY);
@@ -1701,5 +1703,275 @@ void OLed_Display(void)
         break;
     }
 }
+
+//////////////////////////////////////////////////////////////
+
+int bTetris = 0;
+
+#define FIELD_W 8
+#define FIELD_H 48
+#define NUM_FIGURES 7
+
+int fmap[7][4][4] = {
+  {
+    {1, 1, 0, 0},
+    {1, 1, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+  },
+  {
+    {1, 0, 0, 0},
+    {1, 0, 0, 0},
+    {1, 0, 0, 0},
+    {1, 0, 0, 0}
+  },
+  {
+    {0, 0, 1, 0},
+    {1, 1, 1, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+  },
+  {
+    {1, 1, 1, 0},
+    {0, 0, 1, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+  },
+  {
+    {0, 1, 1, 0},
+    {1, 1, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+  },
+  {
+    {1, 1, 0, 0},
+    {0, 1, 1, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+  },
+  {
+    {1, 1, 1, 0},
+    {0, 1, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+  }
+};
+
+int screen[FIELD_W][FIELD_H] = {0};
+int map[4][4];
+int px, py, score, nextmap;
+u8 buf[192];
+
+unsigned int seed = 0x269ec3;
+int rnd( int range ) {
+    seed = seed*0x343fD + 0x269ec3;
+    return ((seed>>16)&0x7fff) % range;
+}
+
+void putpixel(int x, int y, int color, u8 * buf) {
+  if (x<0 || x>=96) return;
+  if (y<0 || y>=16) return;
+  u8 b = 1 << (y % 8);
+  buf += (y/8)*96 + (x%96);
+  if (color)
+    *buf |= b;
+  else
+    *buf &= ~b;
+}
+
+void draw_field(int x, int y, u8 * buf, int buff[FIELD_W][FIELD_H]) {
+  int i,j,w,h;
+  int p = 2;
+  for (i=0; i<FIELD_H; i++)
+    for (j=0; j<FIELD_W; j++)
+      for (w=0; w<p; w++)
+        for (h=0; h<p; h++)
+          putpixel(96-1-(x+i*p+w), 16-1-(y+j*p+h),buff[j][i], buf);
+}
+
+void print(void) {
+  int i, j;
+  static int buff[FIELD_W][FIELD_H];
+
+  for(i = 0; i < FIELD_H; i++)
+    for(j = 0; j < FIELD_W; j++)
+      buff[j][i] = screen[j][i];
+
+  for(i = 0; i < 4; i++)
+    for(j = 0; j < 4; j++)
+      if(map[j][i])
+        buff[j+px][i+py] = 1;
+
+  draw_field(0,0,buf, buff);
+}
+
+
+int valid(int x, int y) {
+  int i, j;
+  if(x < 0) return FALSE;
+  for(i = 0; i < 4; i++)
+    for(j = 0; j < 4; j++)
+      if(map[j][i]) {
+        if ((j+x>=FIELD_W) || (i+y>= FIELD_H)) return FALSE;
+        if (screen[j+x][i+y]) return FALSE;
+      }
+  return TRUE;
+}
+
+#define inv(x) ((x*(-1))+3)
+
+void rotatemap(void) {
+  int _map[4][4];
+  int i, j, sx = 4, sy = 4;
+
+  for(i = 0; i < 4; i++)
+    for(j = 0; j < 4; j++) {
+      _map[j][i] = map[j][i];
+      if(map[j][i]) {
+        if(i < sx) sx = i;
+        if(inv(j) < sy) sy = inv(j);
+      }
+    map[j][i] = 0;
+  }
+
+  for(i = 0; i < 4; i++)
+    for(j = 0; j < 4; j++)
+      if(_map[inv(i)][j]) map[j - sx][i - sy] = 1;
+
+  if(!valid(px,py)) for(i = 0; i < 4; i++) for(j = 0; j < 4; j++) map[j][i] = _map[j][i];
+}
+
+void deleteline(void) {
+  int i, j, k, cl;
+
+  for(i = FIELD_H - 1; i >= 0; i--) {
+    cl = 1;
+
+    for(j = 0, cl = 1; j < FIELD_W; j++)
+      if(!screen[j][i]) cl = 0;
+
+    if(cl) {
+        score += (((i * (-1)) + FIELD_H) * 10);
+        for(k = i; k > 0; k--) {
+            for(j = 0; j < FIELD_W; j++) {
+                screen[j][k] = screen[j][k - 1];
+            }
+        }
+        i++;
+        print();
+    }
+  }
+}
+
+void createmap(void) {
+  int i, j; 
+  for(i = 0; i < 4; i++)
+    for(j = 0; j < 4; j++)
+      map[j][i] = fmap[nextmap][j][i];
+  py = 0;
+  px = FIELD_W / 2;
+  nextmap = rnd(NUM_FIGURES - 1);
+}
+
+void clearscreen(void) {
+  int i, j;
+  for(i = 0; i < FIELD_H; i++) 
+    for(j = 0; j < FIELD_W; j++) 
+      screen[j][i] = 0;
+}
+
+void startgame(void) {
+  clearscreen();
+  px = FIELD_W / 2;
+  py = 0;
+  score = 0;
+  nextmap = rnd(NUM_FIGURES-1);
+  createmap();
+}
+
+int gameover(void) {
+  int i;
+  for(i = 0; i < FIELD_W; i++)
+    if (screen[i][0]) return TRUE;
+  return FALSE;
+}
+
+void advancefigure(void) {
+  int i, j;
+
+  if (!valid(px, py + 1)) {
+    for(i = 0; i < 4; i++)
+        for(j = 0; j < 4; j++)
+            if (map[j][i])
+              screen[px+j][py+i] = 1;
+
+    createmap();
+    deleteline();
+  }
+  else
+    py++;
+}
+
+void dropfigure(void) {
+  int i, j;
+  for(; valid(px, py + 1); py++);
+  for(i = 0; i < 4; i++)
+    for(j = 0; j < 4; j++)
+      if(map[j][i])
+        screen[px+j][py+i] = 1;
+}
+
+int bInit = 0;
+
+void Show_Tetris(void) {
+
+  if (!bInit) {
+     startgame();
+     bInit = 1;
+  }
+
+  switch(Get_gKey()) {
+    case KEY_V1: if(valid(px - 1, py)) px--; break;
+    case KEY_V2: if(valid(px + 1, py)) px++; break;
+    case KEY_V3: rotatemap(); break;
+    case KEY_CN|KEY_V3: bTetris = 0; break;
+
+    case KEY_CN|KEY_V1:
+      if (KD_TIMER==0) {
+        dropfigure();
+        print();
+        deleteline();
+        createmap();
+        Set_gKey(NO_KEY);
+        KD_TIMER = 50;
+      }
+    break;
+
+    case KEY_CN|KEY_V2:
+      if (KD_TIMER==0) {
+        rotatemap();
+        Set_gKey(NO_KEY);
+        KD_TIMER = 25;
+      }
+    break;
+    default: break;
+  }
+
+  if (Get_gKey()!=0)
+    Set_gKey(NO_KEY);
+
+  if (UI_TIMER==0) {
+    UI_TIMER = 50;
+    advancefigure();
+  }
+
+  print();
+
+  if (gameover())
+    startgame();
+
+  Oled_DrawArea(0,0,96,16,buf);
+}
+
 
 /******************************** END OF FILE *********************************/

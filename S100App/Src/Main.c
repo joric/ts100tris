@@ -63,7 +63,11 @@ void main(void)
             Check_Accelerated();
             LEAVE_WAIT_TIMER = 50;
         }
+        
+        if (bTetris) Show_Tetris(); else
+        
         OLed_Display();                             //显示Ctrl_status
+                       
         Status_Tran();                              //根据当前状态，配合按键与控制时间转换
     }
 }

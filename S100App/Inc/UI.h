@@ -52,6 +52,8 @@ void OLed_Display(void);
 void Show_Cal(u8 flag);
 void Show_Config(void);
 void SetOpt_Detailed(void);
+void Show_Tetris(void);
+extern int bTetris;
 
 #endif
 /******************************** END OF FILE *********************************/
