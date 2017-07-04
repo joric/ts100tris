@@ -1870,7 +1870,7 @@ void createmap(void) {
       map[j][i] = fmap[nextmap][j][i];
   py = 0;
   px = FIELD_W / 2;
-  nextmap = rnd(NUM_FIGURES - 1);
+  nextmap = rnd(NUM_FIGURES);
 }
 
 void clearscreen(void) {
@@ -1885,7 +1885,7 @@ void startgame(void) {
   px = FIELD_W / 2;
   py = 0;
   score = 0;
-  nextmap = rnd(NUM_FIGURES-1);
+  nextmap = rnd(NUM_FIGURES);
   createmap();
 }
 
