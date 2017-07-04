@@ -31,10 +31,6 @@ Build
 
 I used IAR Embedded Workbench for ARM EWARM v.7.50.2 10505.
 
-Official TS100 firmware source lack Libraries folder, get it here: https://github.com/x893/TS100.
-
-Copy Libraries folder next to the source folder (source refers to it as ..\Libraries).
-
 Open .eww, hit Make, that's it.
 
 
