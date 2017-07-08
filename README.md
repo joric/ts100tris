@@ -1,6 +1,11 @@
 ts100tris
 =========
 
+This is experimental branch, for the original project see https://github.com/joric/ts100tris
+
+Scripting
+---------
+
 This branch uses AMX (Counter Strike) scripting and Pawn virtual machine written in pure assembly.
 
 Hold button B to run prebuilt AUTOEXEC.AMX uploaded to the USB drive (see the scripts directory).
