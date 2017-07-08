@@ -64,7 +64,7 @@ void main(void)
             LEAVE_WAIT_TIMER = 50;
         }
         
-        if (bTetris) Show_Tetris(); else
+        if (bScript) Show_Script(); else
         
         OLed_Display();                             //œ‘ æCtrl_status
                        

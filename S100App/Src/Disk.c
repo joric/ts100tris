@@ -500,6 +500,15 @@ u8 Config_Analysis(void)
             *(u32*)(VOLUME_BASE + 32) = VOLUME;
             gDisk_buff[0x41A + 32] = 0x03;//簇号
             gDisk_buff[0x41C + 32] = 254;//文件大小
+        } else if(p_file = SearchFile("AUTOEXECAMX",&file_len,&root_addr)){
+            memcpy(str,p_file,254);
+            memset(gDisk_buff, 0x00, 0x2600);
+            memcpy(ROOT_SECTOR + 32, "AUTOEXECAMX",0xC);
+            memcpy(FILE_SECTOR + 512, str,254);
+            gDisk_buff[0x40B + 32] = 0x0; //属性
+            *(u32*)(VOLUME_BASE + 32) = VOLUME;
+            gDisk_buff[0x41A + 32] = 0x03;//簇号
+            gDisk_buff[0x41C + 32] = 254;//文件大小
         } else {
             memset(gDisk_buff, 0x00, 0x2600);
         }

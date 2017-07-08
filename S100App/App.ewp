@@ -1943,6 +1943,33 @@
     </file>
   </group>
   <group>
+    <name>Pawn</name>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\amx.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\amx.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\amxexec_thumb2_iar.s</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\amxfuncs.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\amxfuncs.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\osdefs.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\pawn.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Pawn\pawnconf.h</name>
+    </file>
+  </group>
+  <group>
     <name>Prgm</name>
     <file>
       <name>$PROJ_DIR$\Src\Bios.c</name>
