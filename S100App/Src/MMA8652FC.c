@@ -170,8 +170,8 @@ int Read_ZYXDr(void)
                 gY_value.Byte.lo = value[3];
                 gZ_value.Byte.hi = value[4];
                 gZ_value.Byte.lo = value[5];
-                return 1;
             }
+            return 1;
         } else
             return 0;
     }
@@ -204,7 +204,7 @@ u16 Cheak_XYData(u16 x0,u16 y0,u16 x1,u16 y1)
 *******************************************************************************/
 u16 Update_X(void)
 {
-    u16 value,x;
+    u16 value,x;    
 
     value = ((gX_value.Byte.hi<<8) | (gX_value.Byte.lo & 0xf0 ))>>4;
     if(gX_value.Byte.hi>0x7f)    x = (~value+1) & 0xfff;
@@ -265,4 +265,10 @@ void Check_Accelerated(void)
     x0 = x1;
     y0 = y1;
 }
+
+int GetTilt_Y(void)
+{
+    return gY_value.Byte.hi>0x7f ? -1 : 1;
+}
+
 /******************************** END OF FILE *********************************/

@@ -81,5 +81,6 @@ u16 Update_Y(void);
 u16 Update_Z(void);
 void Check_Accelerated(void);
 void StartUp_Accelerated(void);
+int GetTilt_Y(void);
 #endif
 /******************************** END OF FILE *********************************/

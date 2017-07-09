@@ -1,53 +1,35 @@
 ts100tris
 =========
 
-Tetris for TS100 soldering iron.
+This branch adds to Tetris accelerometer controls. Download precompiled firmware [here](https://raw.githubusercontent.com/joric/ts100tris/accelerometer/S100App/Exe/APP.hex).
 
-[![Tetris for TS100 soldering iron.](http://img.youtube.com/vi/Buzew1z1AhQ/0.jpg)](https://www.youtube.com/watch?v=Buzew1z1AhQ)
+Accelerometer
+-------------
 
-Built on top of an official minidso TS100 firmware starting from version 2.17.
-
-Installation
-------------
-Download .hex file in the [releases section](https://github.com/joric/ts100tris/releases).
-
-Connect to USB while holding button A, copy .hex to USB drive, wait it renames to .rdy, unplug USB.
-
-There's no firmware backup, just revert to the official firmware the same way.
+Stock 2.17 firmware has a bug with accelerometer (it only returns X values). Here's a fix:
 
 
-How to play
------------
+```
+@@ -170,8 +185,8 @@
+                 gY_value.Byte.lo = value[3];
+                 gZ_value.Byte.hi = value[4];
+                 gZ_value.Byte.lo = value[5];
+-                return 1;
+             }
++            return 1;
+         } else
+             return 0;
+     }
+```
 
-Hold button B to start the game. Press A or B to move. Hold A to drop, B to rotate, both buttons to quit.
+Mind that Update_X/Y/Z return unsigned values, so you also need a sign to determine left or right tilt:
 
-Each time you lose the game the soldering iron tip temperature increases by 10 degrees.
+```
+int GetTilt_Y(void)
+{
+    return gY_value.Byte.hi>0x7f ? -1 : 1;
+}
+```
 
-Use 12..24V external power supply for the immersive gaming experience.
-
-
-Build
------
-
-I used IAR Embedded Workbench for ARM EWARM v.7.50.2 10505.
-
-Open .eww, hit Make, that's it.
-
-
-Hardware
---------
-
-* STM32F103T8U6 (ARM Cortex M3, clock frequency 72 MHz)
-
-* MMA8652FC (3-Axis, 12-bit Digital Accelerometer)
-
-* SSD1306 (White 96x16 OLED Display)
-
-Disclaimer
-----------
-
-Accelerometer API doesn't determine tilt direction (left or right), so button controls only (yet).
-
-This is very early alpha, currently works in USB mode only.
 
 

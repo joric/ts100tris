@@ -1712,50 +1712,8 @@ int bTetris = 0;
 #define FIELD_H 48
 #define NUM_FIGURES 7
 
-int fmap[7][4][4] = {
-  {
-    {1, 1, 0, 0},
-    {1, 1, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0}
-  },
-  {
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0}
-  },
-  {
-    {0, 0, 1, 0},
-    {1, 1, 1, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0}
-  },
-  {
-    {1, 1, 1, 0},
-    {0, 0, 1, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0}
-  },
-  {
-    {0, 1, 1, 0},
-    {1, 1, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0}
-  },
-  {
-    {1, 1, 0, 0},
-    {0, 1, 1, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0}
-  },
-  {
-    {1, 1, 1, 0},
-    {0, 1, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0}
-  }
-};
+#define fmap(k,i,j) (p[k]&(1<<(i*4+j)))
+u16 p[7] = {51,4369,116,71,54,99,39};
 
 int screen[FIELD_W][FIELD_H] = {0};
 int map[4][4];
@@ -1786,7 +1744,7 @@ void draw_field(int x, int y, u8 * buf, int buff[FIELD_W][FIELD_H]) {
     for (j=0; j<FIELD_W; j++)
       for (w=0; w<p; w++)
         for (h=0; h<p; h++)
-          putpixel(96-1-(x+i*p+w), 16-1-(y+j*p+h),buff[j][i], buf);
+          putpixel(96-1-(x+i*p+w), (y+j*p+h),buff[j][i], buf);
 }
 
 void print(void) {
@@ -1802,7 +1760,18 @@ void print(void) {
       if(map[j][i])
         buff[j+px][i+py] = 1;
 
+    
   draw_field(0,0,buf, buff);
+  
+  for (i=0; i<96; i++) {
+    putpixel(i,0,1,buf);
+    putpixel(i,15,1,buf);
+  }
+  
+  for (i=0; i<16; i++) {
+    putpixel(0,i,1,buf);
+  }  
+  
 }
 
 
@@ -1867,7 +1836,7 @@ void createmap(void) {
   int i, j; 
   for(i = 0; i < 4; i++)
     for(j = 0; j < 4; j++)
-      map[j][i] = fmap[nextmap][j][i];
+      map[j][i] = fmap(nextmap,i,j)?1:0;
   py = 0;
   px = FIELD_W / 2;
   nextmap = rnd(NUM_FIGURES);
@@ -1930,30 +1899,25 @@ void Show_Tetris(void) {
      bInit = 1;
   }
 
+  Check_Accelerated();
+  static int a;
+  a = ( Update_Y()*5 + (a*95) ) / 100;  
+  
+  //char str[16]; own_sprintf(str, "%d   ", a); Display_Str10(0,str); return;
+  
+  if (a>8 && KD_TIMER==0) {
+    if (GetTilt_Y()>0) {
+      if (valid(px+1, py)) px++;
+    } else {
+      if (valid(px-1, py)) px--;
+    }
+    KD_TIMER=25;
+  }
+  
   switch(Get_gKey()) {
-    case KEY_V1: if(valid(px - 1, py)) px--; break;
-    case KEY_V2: if(valid(px + 1, py)) px++; break;
-    case KEY_V3: rotatemap(); break;
+    case KEY_V1: dropfigure(); print(); deleteline(); createmap(); break;
+    case KEY_V2: rotatemap(); break;
     case KEY_CN|KEY_V3: bTetris = 0; break;
-
-    case KEY_CN|KEY_V1:
-      if (KD_TIMER==0) {
-        dropfigure();
-        print();
-        deleteline();
-        createmap();
-        Set_gKey(NO_KEY);
-        KD_TIMER = 50;
-      }
-    break;
-
-    case KEY_CN|KEY_V2:
-      if (KD_TIMER==0) {
-        rotatemap();
-        Set_gKey(NO_KEY);
-        KD_TIMER = 25;
-      }
-    break;
     default: break;
   }
 
