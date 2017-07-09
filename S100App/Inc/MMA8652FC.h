@@ -70,16 +70,22 @@ History:
 #define INT_EN_FF_MT    1<<2    //Freefall/Motion Interrupt Enable
 #define INT_EN_DRDY     1<<0    //Data Ready Interrupt Enable
 
+#define AXIS_X   1
+#define AXIS_Y   2
+#define AXIS_Z   3
+
+u8 Get_XYZDrt(u8 axis);
+u16 Get_MmaActive(void);
 u16 Get_MmaShift(void);
 void Set_MmaShift(u16 shift);
-u16 Get_MmaActive(void);
 void MMA865x_Standby(void);
 void MMA865x_Active(void);
-u16 Cheak_XYData(u16 x0,u16 y0,u16 x1,u16 y1);
+u16 Cheak_XYData(u16 x1,u16 y1,u16 z1);
 u16 Update_X(void);
 u16 Update_Y(void);
 u16 Update_Z(void);
 void Check_Accelerated(void);
 void StartUp_Accelerated(void);
+
 #endif
 /******************************** END OF FILE *********************************/
