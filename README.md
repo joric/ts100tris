@@ -7,6 +7,7 @@ Tetris for TS100 soldering iron.
 
 Built on top of an official minidso TS100 firmware starting from version 2.17.
 
+
 Installation
 ------------
 Download .hex file in the [releases section](https://github.com/joric/ts100tris/releases).
@@ -46,8 +47,7 @@ Hardware
 Disclaimer
 ----------
 
-Accelerometer API doesn't determine tilt direction (left or right), so button controls only (yet).
-
 This is very early alpha, currently works in USB mode only.
 
+There's also an experimental [accelerometer](https://github.com/joric/ts100tris/tree/accelerometer) branch.
 
