@@ -62,7 +62,7 @@ void main(void)
         if (Get_CtrlStatus() != CONFIG  && LEAVE_WAIT_TIMER == 0) {
             Check_Accelerated();
             LEAVE_WAIT_TIMER = 50;
-        }
+        }        
         OLed_Display();                             //显示Ctrl_status
         Status_Tran();                              //根据当前状态，配合按键与控制时间转换
     }

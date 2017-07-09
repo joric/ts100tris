@@ -137,7 +137,12 @@ void StartUp_Accelerated(void)
     IIC_RegWrite(CTRL_REG1,  DataRateValue); //IIC_RegRead(CTRL_REG1)|
     //----设置采样工作模式------------------------------------------------------//
     IIC_RegWrite(CTRL_REG2, 0);//(IIC_RegRead(CTRL_REG2) & ~MODS_MASK)
-    //---------启动测量模式------------------------------------//
+    //---------启动测量模式------------------------------------//        
+    
+    IIC_RegWrite(0x2F, 4);  //OFF_X
+    IIC_RegWrite(0x30, 6);  //OFF_Y
+    IIC_RegWrite(0x31, 8);  //OFF_Z
+        
     MMA865x_Active();
 }
 
@@ -204,7 +209,9 @@ u16 Cheak_XYData(u16 x0,u16 y0,u16 x1,u16 y1)
 *******************************************************************************/
 u16 Update_X(void)
 {
-    u16 value,x;
+    u16 value,x; 
+    
+    return gX_value.Byte.hi;
 
     value = ((gX_value.Byte.hi<<8) | (gX_value.Byte.lo & 0xf0 ))>>4;
     if(gX_value.Byte.hi>0x7f)    x = (~value+1) & 0xfff;
@@ -221,7 +228,7 @@ u16 Update_X(void)
 u16 Update_Y(void)
 {
     u16 value,y;
-
+    
     value = ((gY_value.Byte.hi<<8) | (gY_value.Byte.lo & 0xf0 ))>>4;
     if(gY_value.Byte.hi>0x7f)    y = (~value+1) & 0xfff;
     else                          y = value & 0xfff;

@@ -1522,7 +1522,23 @@ void OLed_Display(void)
     static u8 td_flag = 0,ver_flag = 0,config_show = 0;
     static u16 td_cnt = 0;
     static u16 bk = 0x33,id_cnt = 0;
-
+    
+    Check_Accelerated();
+    char str[16];
+    //own_sprintf(str,"%d %d %d", Update_X(), Update_Y(), Update_Z());
+    //own_sprintf(str,"%d %d", Update_X(), Update_Y());
+    own_sprintf(str,"%d     ", Update_X());
+    Display_Str10(0,str);
+    
+    return;
+ 
+    /*
+    gHanders = Update_X()>128 ? 1 : 0;
+    if (device_info.handers != gHanders) {
+      device_info.handers = gHanders;
+      Init_Oled();          
+    }*/
+                
     switch (Get_CtrlStatus()) {//×´Ì¬ÅÐ¶Ï
     case IDLE://´ý»ú×´Ì¬
         if(gCont == 1) {
