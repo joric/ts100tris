@@ -20,7 +20,9 @@ There's no firmware backup, just revert to the official firmware the same way.
 How to play
 -----------
 
-Hold button B to start the game. Press A or B to move. Hold A to drop, B to rotate, both buttons to quit.
+Hold button B to start the game.
+
+Press A or B to move, A+B or hold B to rotate, hold A to drop, hold both buttons to quit.
 
 Each time you lose the game the soldering iron tip temperature increases by 10 degrees.
 
