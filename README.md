@@ -12,7 +12,7 @@ What I've tried (in order of appearance):
 
 * Micropython is "[80K of ARM Thumb2 code and 8KB is minimal amount to run simple scripts](https://github.com/micropython/micropython/wiki/FAQ)". Way too large, especially considering that existing firmware with USB drive and FAT12 support occupies most of available 64KB (uploading scripts via UART is way less convenient).
 
-* PyMite, I've tried [older versions of PyMite](https://code.google.com/archive/p/python-on-a-chip/downloads) but they still occupy too much space (and needs precompilation). So, I guess, we stuck with native C (or smaller interpreters).
+* PyMite, I've tried [older versions of PyMite](https://code.google.com/archive/p/python-on-a-chip/downloads) but they still occupy too much space (and scripts need precompilation). So, I guess, we stuck with native C (or smaller interpreters).
 
 This branch uses AMX (Counter Strike) scripting and Pawn virtual machine written in pure assembly.
 
