@@ -53,3 +53,12 @@ This is very early alpha, currently works in USB mode only.
 
 There's also an experimental [accelerometer](https://github.com/joric/ts100tris/tree/accelerometer) branch.
 
+Press
+-----
+
+* [Hackaday: Tetris on a soldering iron](http://hackaday.com/2017/07/07/tetris-on-a-soldering-iron/)
+* [Lenta.Ru: Программист запустил "Тетрис" на паяльнике](https://lenta.ru/news/2017/07/05/tetris/)
+* [Vice: Play the Tiniest Version of 'Tetris' on a Soldering Iron](https://motherboard.vice.com/en_us/article/59pdpd/play-the-tiniest-version-of-tetris-on-a-soldering-iron)
+
+
+
