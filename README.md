@@ -59,6 +59,7 @@ Press
 * [Hackaday: Tetris on a soldering iron](http://hackaday.com/2017/07/07/tetris-on-a-soldering-iron/)
 * [Lenta.Ru: Программист запустил "Тетрис" на паяльнике](https://lenta.ru/news/2017/07/05/tetris/)
 * [Vice: Play the Tiniest Version of 'Tetris' on a Soldering Iron](https://motherboard.vice.com/en_us/article/59pdpd/play-the-tiniest-version-of-tetris-on-a-soldering-iron)
+* [Hacker News: Tetris for TS100 soldering iron](https://news.ycombinator.com/item?id=15172345)
 
 
 
