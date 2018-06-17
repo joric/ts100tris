@@ -51,7 +51,10 @@ Disclaimer
 
 This is very early alpha, currently works in USB mode only.
 
-There's also an experimental [accelerometer](https://github.com/joric/ts100tris/tree/accelerometer) branch.
+There are also an experimental
+[accelerometer](https://github.com/joric/ts100tris/tree/accelerometer),
+[autorotate](https://github.com/joric/ts100tris/tree/autorotate) and
+[scripting](https://github.com/joric/ts100tris/tree/scripting) branches.
 
 Press
 -----
